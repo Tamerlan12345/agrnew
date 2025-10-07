@@ -106,6 +106,7 @@
                     <input type="radio" id="mode-calc-terminate" name="main-mode" value="calc-terminate"><label for="mode-calc-terminate">Расторжение</label>
                     <input type="radio" id="mode-manual" name="main-mode" value="manual" checked><label for="mode-manual">Ручной ввод</label>
                     <input type="radio" id="mode-info" name="main-mode" value="info"><label for="mode-info">Информационное</label>
+                    <span id="ai-status-indicator" style="margin-left: 15px; font-size: 0.9rem; padding: 5px 10px; border-radius: 4px;"></span>
                 </div>
             </div>
         </fieldset>
@@ -602,8 +603,43 @@ async function processInformationalTextAI(userInput) {
     }
 }
 
+// --- НОВАЯ ФУНКЦИЯ ДЛЯ ПРОВЕРКИ СТАТУСА AI ---
+async function checkAIStatus() {
+    const indicator = document.getElementById('ai-status-indicator');
+    const infoRadio = document.getElementById('mode-info');
+    try {
+        const response = await fetch('/api/status');
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            indicator.textContent = 'AI Сервис Активен';
+            indicator.style.backgroundColor = 'rgba(0, 255, 140, 0.1)';
+            indicator.style.color = 'var(--accent-glow)';
+            indicator.style.border = '1px solid var(--accent-glow)';
+            infoRadio.disabled = false;
+        } else {
+            indicator.textContent = 'AI Сервис Не настроен';
+            indicator.style.backgroundColor = 'rgba(255, 0, 229, 0.1)';
+            indicator.style.color = 'var(--error-color)';
+            indicator.style.border = '1px solid var(--error-color)';
+            infoRadio.disabled = true;
+        }
+    } catch (error) {
+        console.error('Ошибка при проверке статуса AI:', error);
+        indicator.textContent = 'Ошибка подключения';
+        indicator.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
+        indicator.style.color = 'orange';
+        indicator.style.border = '1px solid orange';
+        infoRadio.disabled = true;
+    }
+}
+
+
 // Инициализация UI
-switchMainMode('manual');
+document.addEventListener('DOMContentLoaded', () => {
+    switchMainMode('manual');
+    checkAIStatus(); // Проверяем статус при загрузке
+});
 </script>
 </body>
 </html>
