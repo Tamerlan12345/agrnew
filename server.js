@@ -8,6 +8,16 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// API endpoint to check the status of the Gemini API key
+app.get('/api/status', (req, res) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (apiKey) {
+        res.json({ status: 'ok', message: 'AI service is configured.' });
+    } else {
+        res.json({ status: 'unconfigured', message: 'GEMINI_API_KEY is not set.' });
+    }
+});
+
 // API endpoint to process text with Gemini
 app.post('/api/process-text', async (req, res) => {
     // 1. Get API Key from environment variables
