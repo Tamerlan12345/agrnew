@@ -102,12 +102,12 @@ app.post('/api/process-text', async (req, res) => {
     }
 });
 
-// Serve static files from the root directory (for index.html)
-app.use(express.static(path.join(__dirname)));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the main index.html file on the root route as a fallback for any other GET request
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
