@@ -1,0 +1,12 @@
+{
+  "build": {
+    "steps": {
+      "build": {
+        "command": ""
+      }
+    }
+  },
+  "deploy": {
+    "command": "npm install --production && node server.js"
+  }
+}
